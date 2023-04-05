@@ -27,7 +27,7 @@ param (
     $TargetFolder = (Get-Location).Path,
 
     [Parameter(Mandatory = $false, HelpMessage = "Replaces Storage Account connection strings with local development storage.")]
-    [string]
+    [bool]
     $UseDevelopmentStorage = $true,
 
     [Parameter(Mandatory = $false, HelpMessage = "Defines whether or not the settings should be encrypted at tSettings won't be encrypted anymore if the flag is provided.")]
