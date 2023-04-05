@@ -15,7 +15,7 @@
         Create-AzureFunctionLocalSettings -FunctionAppName {functionAppResourceName} -TargetFolder {targetFolder}
 
     .EXAMPLE
-        Create-AzureFunctionLocalSettings -FunctionAppName {functionAppResourceName} -TargetFolder {targetFolder} -UseDevelopmentStorage -Decrypted -Force
+        Create-AzureFunctionLocalSettings -FunctionAppName {functionAppResourceName} -TargetFolder {targetFolder} -UseDevelopmentStorage $false -Decrypted -Force
 #>
 param (
     [Parameter(Mandatory = $true, HelpMessage = "Existing Azure Function App resource name from where the app settings should be pulled from.")]
