@@ -9,13 +9,13 @@
         Oldest versions are deleted first.
 
     .EXAMPLE
-        Remove-ObsoletetTemplateSpecVersions -SubscriptionName "subscriptionName"
+        Remove-ObsoleteTemplateSpecVersions -SubscriptionName "subscriptionName"
 
     .EXAMPLE
-        Remove-ObsoletetTemplateSpecVersions -SubscriptionName "subscriptionName" -MaxVersionsToKeepPerTemplateSpec 200 -Detailed
+        Remove-ObsoleteTemplateSpecVersions -SubscriptionName "subscriptionName" -MaxVersionsToKeepPerTemplateSpec 200 -Detailed
 
     .EXAMPLE
-        Remove-ObsoletetTemplateSpecVersions -SubscriptionName "subscriptionName" -MaxVersionsToKeepPerTemplateSpec 200 -Detailed -WhatIf
+        Remove-ObsoleteTemplateSpecVersions -SubscriptionName "subscriptionName" -MaxVersionsToKeepPerTemplateSpec 200 -Detailed -WhatIf
 #>
 param (
     [Parameter(Mandatory = $true, HelpMessage = "The Azure subscription name for which the template specs should be analyzed and/or cleaned up.")]
