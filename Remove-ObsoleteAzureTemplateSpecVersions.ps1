@@ -18,9 +18,9 @@
         Remove-ObsoleteTemplateSpecVersions -SubscriptionName "subscriptionName" -MaxVersionsToKeepPerTemplateSpec 200 -Detailed -WhatIf
 #>
 param (
-    [Parameter(Mandatory = $true, HelpMessage = "The Azure subscription name for which the template specs should be analyzed and/or cleaned up.")]
+    [Parameter(Mandatory = $false, HelpMessage = "The Azure subscription name for which the template specs should be analyzed and/or cleaned up.")]
     [string]
-    $SubscriptionName,
+    $SubscriptionName = "",
 
     [Parameter(Mandatory = $false, HelpMessage = "The maximum number of versions to keep per template spec.")]
     [int]
@@ -37,7 +37,9 @@ param (
 
 $ErrorActionPreference = "Stop"
 
-Set-AzContext -Subscription $SubscriptionName | Out-Null
+if ($SubscriptionName -ne "") {
+    Set-AzContext -Subscription $SubscriptionName | Out-Null
+}
 
 # Get all template specs
 Write-Host "Retrieving all template specs of subscription ""$((Get-AzContext).Subscription.Name)""..."
@@ -70,9 +72,9 @@ foreach ($templateSpec in $templateSpecs) {
         Write-Host "- Number of versions to delete: $numToDelete"
 
         # Remove versions until limit is reached
-        $numDeleted = 1
+        $numDeleted = 0
         foreach ($version in $versions) {
-            if ($MaxVersionsToKeepPerTemplateSpec -lt $numVersions) {
+            if ($numDeleted -lt $numToDelete) {
                 if ($renderProgressBar) {
                     Write-Progress -Activity "- $(if ($WhatIf) { "What if:" }) Removing versions" -Status "$numDeleted of $numToDelete" -PercentComplete (($numDeleted / $numToDelete) * 100)
                     Start-Sleep -Seconds 0.05
@@ -84,7 +86,6 @@ foreach ($templateSpec in $templateSpecs) {
                     Remove-AzTemplateSpec -Name $templateSpec.Name -ResourceGroupName $templateSpec.ResourceGroupName -Version $version.Name -Force | Out-Null
                 }
 
-                $MaxVersionsToKeepPerTemplateSpec++
                 $numDeleted++
             } else {
                 if ($renderProgressBar) {
