@@ -12,6 +12,8 @@ param (
     $WhatIf = $false
 )
 
+$ExitCode = 0
+
 # Get all asset files
 $AttachmentFiles = Get-ChildItem -Path $AttachmentFolderPath -File
 
@@ -29,7 +31,13 @@ foreach ($AttachmentFile in $AttachmentFiles) {
         if (!$WhatIf) {
             Remove-Item -Path $AttachmentFile.FullName -Force
         }
+        else {
+            # In a pipeline scenario we want a bad exit code to indicate that an actual cleanup without -WhatIf should be done.
+            $ExitCode = 1
+        }
         
         Write-Host $(if ($WhatIf) { "What if:" }) "Deleted unused/unreferenced attachment file: $($AttachmentFile.Name)"
     }
 }
+
+Exit $ExitCode
