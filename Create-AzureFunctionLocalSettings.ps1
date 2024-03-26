@@ -66,7 +66,7 @@ if ($LastExitCode -ne 0) {
 $localSettingsJsonContent = Get-Content $localSettingsJsonFilePath
 
 Write-Host -ForegroundColor Gray "Replacing Key Vault references with secret values..."
-$keyVaultReferenceRegex = "@Microsoft.KeyVault\(VaultName=(?<vaultName>[^;]+);SecretName=(?<secretName>[^\)]+)\)"
+$keyVaultReferenceRegex = "@Microsoft\.KeyVault\(VaultName=(?<vaultName>[^;]+);SecretName=(?<secretName>[^;]+)(;SecretVersion=(?<secretVersion>[^;\)]*))?\)"
 $keyVaultReferenceMatches = $localSettingsJsonContent | Select-String -Pattern $keyVaultReferenceRegex -AllMatches | ForEach-Object {$_.Matches}
 
 foreach ($match in $keyVaultReferenceMatches) {
@@ -77,6 +77,8 @@ foreach ($match in $keyVaultReferenceMatches) {
     if ($LastExitCode -ne 0) {
         return
     }
+
+    Write-Host $match.Value
 
     $localSettingsJsonContent = $localSettingsJsonContent.Replace($match.Value, "$secretValue")
 }
